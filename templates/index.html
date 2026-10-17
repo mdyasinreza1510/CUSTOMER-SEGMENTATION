@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Segmentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Karla:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --moss: #2b4636;
+    --fern: #6f9271;
+    --meadow: #c3dab2;
+    --dusk: #9db8c4;
+    --honey: #d7a53d;
+    --honey-deep: #96691c;
+    --linen: #f3f7ee;
+    --ink: #2c3a2a;
+    --muted: #62785d;
+    --glass: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.65);
+    --shadow: rgba(43, 70, 54, 0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    font-family: 'Karla', -apple-system, sans-serif;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    background: linear-gradient(160deg, #f3f7ee 0%, #eef3ea 35%, #eef2f0 65%, #f2f5ee 100%);
+  }
+
+  .bg-decor { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+
+  .blob { position: absolute; filter: blur(75px); animation: float 22s ease-in-out infinite; }
+
+  .blob-1 {
+    width: 420px; height: 380px; background: var(--meadow); opacity: .55;
+    border-radius: 63% 37% 54% 46% / 47% 41% 59% 53%;
+    top: -130px; left: -110px;
+  }
+  .blob-2 {
+    width: 380px; height: 420px; background: var(--dusk); opacity: .5;
+    border-radius: 42% 58% 65% 35% / 55% 45% 55% 45%;
+    top: 0; right: -150px; animation-delay: -7s;
+  }
+  .blob-3 {
+    width: 360px; height: 340px; background: var(--honey); opacity: .3;
+    border-radius: 55% 45% 40% 60% / 60% 55% 45% 40%;
+    bottom: -150px; left: 18%; animation-delay: -14s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0,0) rotate(0deg); }
+    33% { transform: translate(30px,-25px) rotate(8deg); }
+    66% { transform: translate(-20px,20px) rotate(-6deg); }
+  }
+
+  .container { position: relative; z-index: 1; width: 100%; max-width: 500px; }
+
+  .glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 26px;
+    padding: 46px 42px;
+    box-shadow: 0 24px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+    animation: rise .7s ease both;
+  }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+  .mark { display: flex; justify-content: center; margin-bottom: 16px; }
+  .mark svg { filter: drop-shadow(0 6px 14px rgba(43,70,54,0.25)); }
+
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--moss);
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle { text-align: center; color: var(--muted); font-size: .92rem; margin: 10px 0 32px; line-height: 1.5; }
+
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 14px; margin-bottom: 10px; }
+
+  .field label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: .72rem; font-weight: 700; color: var(--moss);
+    margin-bottom: 8px; text-transform: uppercase; letter-spacing: .05em;
+  }
+
+  .field input {
+    width: 100%; padding: 13px 14px;
+    font-family: 'Karla', sans-serif; font-size: .96rem; font-weight: 500;
+    color: var(--ink);
+    background: rgba(255,255,255,.5);
+    border: 1.5px solid rgba(255,255,255,.75);
+    border-radius: 13px;
+    outline: none;
+    transition: all .25s ease;
+  }
+
+  .field input::placeholder { color: #93a690; font-weight: 400; }
+
+  .field input:focus {
+    background: rgba(255,255,255,.92);
+    border-color: var(--fern);
+    box-shadow: 0 0 0 4px rgba(111,146,113,.18);
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  svg.ico { fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .field label svg.ico { width: 14px; height: 14px; stroke: var(--fern); flex-shrink: 0; }
+
+  button[type="submit"] {
+    width: 100%; padding: 15px; margin-top: 12px;
+    font-family: 'Karla', sans-serif; font-size: .98rem; font-weight: 700; letter-spacing: .01em;
+    color: #fdfcf8;
+    background: linear-gradient(135deg, var(--fern) 0%, var(--moss) 100%);
+    border: none; border-radius: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    box-shadow: 0 12px 26px rgba(43,70,54,0.3);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  button[type="submit"] svg.ico { width: 17px; height: 17px; stroke: #fdfcf8; transition: transform .2s ease; }
+  button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(43,70,54,0.38); }
+  button[type="submit"]:hover svg.ico { transform: translateX(3px); }
+  button[type="submit"]:active { transform: translateY(0); }
+  button[type="submit"]:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(111,146,113,.4), 0 12px 26px rgba(43,70,54,.3); }
+
+  .result {
+    margin-top: 26px; padding: 24px; text-align: center;
+    background: linear-gradient(135deg, rgba(215,165,61,0.16), rgba(111,146,113,0.2));
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 17px;
+    animation: rise .5s ease both;
+  }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); font-weight: 700; margin-bottom: 10px;
+  }
+
+  h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.6rem; font-weight: 700; color: var(--honey-deep); }
+
+  @media (max-width: 480px) {
+    .glass-card { padding: 36px 24px; }
+    .fields { grid-template-columns: 1fr; }
+    h1 { font-size: 1.65rem; }
+    .blob { filter: blur(55px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob, .glass-card, .result { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-decor">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<div class="container">
+  <div class="glass-card">
+
+    <div class="mark">
+      <svg viewBox="0 0 60 60" width="52" height="52" aria-hidden="true">
+        <g transform="translate(30,30)">
+          <path d="M0,-3 C10,-15 19,-9 14,3 C10,15 -3,13 -2,2 Z" fill="#6f9271" transform="rotate(0)"/>
+          <path d="M0,-3 C10,-15 19,-9 14,3 C10,15 -3,13 -2,2 Z" fill="#d7a53d" transform="rotate(90)"/>
+          <path d="M0,-3 C10,-15 19,-9 14,3 C10,15 -3,13 -2,2 Z" fill="#9db8c4" transform="rotate(180)"/>
+          <path d="M0,-3 C10,-15 19,-9 14,3 C10,15 -3,13 -2,2 Z" fill="#2b4636" transform="rotate(270)"/>
+        </g>
+      </svg>
+    </div>
+
+    <h1>Customer Segmentation</h1>
+    <p class="subtitle">Enter the details below to reveal the customer's segment</p>
+
+    <form action="/predict" method="POST">
+      <div class="fields">
+        <div class="field">
+          <label for="age">
+            <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>
+            Age
+          </label>
+          <input type="number" id="age" name="age" min="0" placeholder="eg:-34" required>
+        </div>
+
+        <div class="field">
+          <label for="income">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M15 10c0-1.4-1.4-2.5-3-2.5s-3 1.1-3 2.5 1.4 2.3 3 2.5c1.6.2 3 1.1 3 2.5s-1.4 2.5-3 2.5-3-1.1-3-2.5"/></svg>
+            Income
+          </label>
+          <input type="number" id="income" name="income" min="0" placeholder="eg:-55000" required>
+        </div>
+
+        <div class="field">
+          <label for="spending">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M6.5 2.5 3.5 6.5v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-13l-3-4Z"/><path d="M3.5 6.5h17M15.5 10.5a3.5 3.5 0 0 1-7 0"/></svg>
+            Total Spending
+          </label>
+          <input type="number" id="spending" name="spending" min="0" placeholder="eg:-1200" required>
+        </div>
+
+        <div class="field">
+          <label for="purchases">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="9" cy="20.5" r="1"/><circle cx="18" cy="20.5" r="1"/><path d="M1.5 1.5h3l2.4 12.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L21.5 6H6"/></svg>
+            Total Purchases
+          </label>
+          <input type="number" id="purchases" name="purchases" min="0" placeholder="eg:-25" required>
+        </div>
+      </div>
+
+      <button type="submit">
+        Predict Customer Type
+        <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+      <div class="tag">
+        <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M12 2l1.6 5.6L19 9l-5.4 1.4L12 16l-1.6-5.6L5 9l5.4-1.4Z" fill="#96691c"/></svg>
+        Predicted Customer Type
+      </div>
+      <h3>{{ prediction }}</h3>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+</body>
+</html>
