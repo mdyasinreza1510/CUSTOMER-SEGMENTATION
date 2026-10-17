@@ -225,39 +225,7 @@ The trained ML model predicts the customer's segment instantly.
 
 ---
 
-# 📦 Installation
 
-Clone the repository
-
-```bash
-git clone https://github.com/yourusername/customer-segmentation.git
-```
-
-Go to project folder
-
-```bash
-cd customer-segmentation
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Run Flask
-
-```bash
-python app.py
-```
-
-Open
-
-```
-http://127.0.0.1:5000/
-```
-
----
 
 # 📈 Future Improvements
 
